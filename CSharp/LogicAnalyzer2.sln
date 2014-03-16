@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogicAnalyzer", "LogicAnalyzer.csproj", "{C141DCCA-146E-4D00-A47F-E0AE8C98335F}"
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 1
+		SccProjectUniqueName0 = LogicAnalyzer.csproj
+		SccProjectName0 = \u0022$/LogicAnalyzer\u0022,\u0020CWDAAAAA
+		SccLocalPath0 = .
+		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C141DCCA-146E-4D00-A47F-E0AE8C98335F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C141DCCA-146E-4D00-A47F-E0AE8C98335F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C141DCCA-146E-4D00-A47F-E0AE8C98335F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C141DCCA-146E-4D00-A47F-E0AE8C98335F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
