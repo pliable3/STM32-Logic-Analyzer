@@ -86,7 +86,7 @@ namespace LogicAnalyzer.Test
         {
             string cmd = enc.GetString(Bytes);
 
-           //
+            //
             // Commands (requests from the controller):
             //
             // START: Start sampling and send sample data back to the controller.
@@ -137,7 +137,7 @@ namespace LogicAnalyzer.Test
         /// </summary>
         private void Copyright()
         {
-            BroadcastDataReceived("Logic Analyzer Test Controller by Bob Foley\r\nversion 0.50  (rev. 6-Mar-2014 12:01 p.m.)\r\n\r\n");
+            BroadcastDataReceived("Logic Analyzer Test Controller by Bob Foley\r\nversion 0.50  (rev. 17-Mar-2014 12:50 p.m.)\r\n\r\n");
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace LogicAnalyzer.Test
             BroadcastDataReceived("pOnG\r\n");
         }
 
-        // Note that the TestController currently only works with 8 channels in non-compressed mode.
+        // Note that the TestController currently only works non-compressed mode.
 
         // Simulated signals emulate this pattern (sampling rate dependent).
         // 0: 1 KHz
@@ -175,10 +175,37 @@ namespace LogicAnalyzer.Test
         /// <param name="e"></param>
         private void GenerateSamples(object sender, DoWorkEventArgs e)
         {
-            int totSamples = samplingRate * samplingTime / 1000;
-            double samplePeriod = 1.0 / samplingRate;
-            byte bits = 0, prevBits = 0;
+            byte[] channelMasks = { 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff };
+            byte channelMask, channelShift;
+            int totSamples;
+            double samplePeriod;
+            byte bits = 0, stackedBits = 0, prevBits = 0;
+            byte stackShift = 0;
 
+            if (samplingChannels < 1 || samplingChannels > 8)
+                throw new Exception("Invalid value for Sampling Channels in Test Device");
+            if (samplingRate <= 0)
+                throw new Exception("Invalid value for Sampling Rate in Test Device");
+
+            samplePeriod = 1.0 / samplingRate;
+            switch (samplingChannels)
+            {
+                case 1:
+                    channelShift = 1;
+                    break;
+                case 2:
+                    channelShift = 2;
+                    break;
+                case 3:
+                case 4:
+                    channelShift = 4;
+                    break;
+                default:
+                    channelShift = 8;
+                    break;
+            }
+            channelMask = channelMasks[samplingChannels - 1];
+            totSamples = samplingRate * samplingTime / 1000;
             sampleData = new List<byte>(1004);
 
             try
@@ -213,6 +240,9 @@ namespace LogicAnalyzer.Test
                         }
                     }
 
+                    // Mask off the bits of the channels we're not using.
+                    bits &= channelMask;
+
                     // If we're in transition-only mode, don't add a sample if it hasn't changed.
                     if (samplingMode == DataGrabber.SamplingModes.TransitionsOnly)
                     {
@@ -234,6 +264,25 @@ namespace LogicAnalyzer.Test
                         sampleData.Add((byte)(i & 0xff));
                         sampleData.Add((byte)((i >> 8) & 0xff));
                     }
+                    else
+                    {
+                        // Check if we can stack more samples per byte.
+                        // Note that transition-only mode does not stack samples.
+                        if (this.samplingChannels <= 4)
+                        {
+                            stackedBits |= (byte)(bits << stackShift);
+                            stackShift += channelShift;
+
+                            // If we don't yet have a full byte, wait for the next sample
+                            // before queuing it.
+                            if (stackShift < 8)
+                                continue;
+
+                            bits = stackedBits;
+                            stackShift = 0;
+                            stackedBits = 0;
+                        }
+                    }
 
                     sampleData.Add(bits);
                     if (sampleData.Count >= 1000)
@@ -252,7 +301,6 @@ namespace LogicAnalyzer.Test
             }
             catch (Exception ex)
             {
-                //System.Diagnostics.Debug.WriteLine(ex.Message);
                 BroadcastError(ex);
             }
         }

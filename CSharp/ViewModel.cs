@@ -622,7 +622,7 @@ namespace LogicAnalyzer
             BroadcastStatusMessage("Sampling Complete\r\n", MessageEventArgs.MessageTypes.Important);
 
             // and tell our listeners to plot the data.
-            BroadcastPlot(new SamplePlot(grabber.Data.ToArray(), grabber.SamplingChannels));
+            BroadcastPlot(new SamplePlot(grabber.Data.ToArray(), grabber.SamplingChannels, grabber.SamplingMode != DataGrabber.SamplingModes.TransitionsOnly));
         }
 
         /// <summary>

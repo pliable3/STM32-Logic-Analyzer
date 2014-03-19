@@ -16,7 +16,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -54,8 +53,9 @@ uint8_t SamplingMode = SAMPLING_MODE_CONTINUOUS;
  */
 void ProcessCommands() {
 	char *p = UsartGets();
+	uint32_t v;
 
-	if (p == NULL)
+	if (p == NULL )
 		return;
 
 	if (strcmp(p, "START") == 0)
@@ -66,12 +66,25 @@ void ProcessCommands() {
 		Copyright();
 	else if (strcmp(p, "PING") == 0)
 		PingResponse();
-	else if (strncmp(p, "CHAN=", 5) == 0)
-		SamplingChannels = atoi(p + 5);
-	else if (strncmp(p, "RATE=", 5) == 0)
-		SamplingRate = atoi(p + 5);
-	else if (strncmp(p, "TIME=", 5) == 0)
-		SamplingTime = atoi(p + 5);
+	else if (strncmp(p, "CHAN=", 5) == 0) {
+		v = atoi(p + 5);
+
+		// Must be 1-8 */
+		if (v >= 1 && v <= 8)
+			SamplingChannels = v;
+	} else if (strncmp(p, "RATE=", 5) == 0) {
+		v = atoi(p + 5);
+
+		// Minimum of 10 Hz, maximum of 10 MHz
+		if (v > 10 && v < 10000000)
+			SamplingRate = v;
+	} else if (strncmp(p, "TIME=", 5) == 0) {
+		v = atoi(p + 5);
+
+		// Minimum of 10 ms, maximum of 100 s
+		if(v > 10 && v < 100000)
+			SamplingTime = v;
+	}
 	else if (strncmp(p, "COMP=", 5) == 0)
 		SamplingCompression = (*(p + 5) == 'Y');
 	else if (strncmp(p, "MODE=", 5) == 0)

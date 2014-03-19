@@ -290,6 +290,13 @@ namespace LogicAnalyzer
             customLaDisplayControl1.ZoomOut();
         }
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            About abt = new About();
+
+            abt.ShowDialog(this);
+            abt.Dispose();
+        }
         #endregion
     }
 }

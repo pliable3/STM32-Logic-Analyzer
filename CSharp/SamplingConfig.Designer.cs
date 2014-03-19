@@ -181,6 +181,7 @@
             this.dataModeTransitions.TabStop = true;
             this.dataModeTransitions.Text = "Transitions only";
             this.dataModeTransitions.UseVisualStyleBackColor = true;
+            this.dataModeTransitions.CheckedChanged += new System.EventHandler(this.dataModeTransitions_CheckedChanged);
             // 
             // dataModeContinuous
             // 
@@ -193,6 +194,7 @@
             this.dataModeContinuous.TabStop = true;
             this.dataModeContinuous.Text = "Continuous stream";
             this.dataModeContinuous.UseVisualStyleBackColor = true;
+            this.dataModeContinuous.CheckedChanged += new System.EventHandler(this.dataModeTransitions_CheckedChanged);
             // 
             // label4
             // 
@@ -251,6 +253,7 @@
             this.testController.TabIndex = 2;
             this.testController.Text = "Test Controller";
             this.testController.UseVisualStyleBackColor = true;
+            this.testController.CheckedChanged += new System.EventHandler(this.serialPortController_CheckedChanged);
             // 
             // ethernetController
             // 
@@ -276,6 +279,7 @@
             this.serialPortController.TabStop = true;
             this.serialPortController.Text = "Serial Port Controller";
             this.serialPortController.UseVisualStyleBackColor = true;
+            this.serialPortController.CheckedChanged += new System.EventHandler(this.serialPortController_CheckedChanged);
             // 
             // SamplingConfig
             // 

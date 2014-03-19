@@ -1,4 +1,4 @@
-//
+  //
 //    8-Channel Logic Analyzer
 //    Copyright (C) 2014  Bob Foley
 //
@@ -111,9 +111,9 @@ void TIM2_IRQHandler() {
  * @retval none
  */
 void TimerInit(uint32_t TimerBaseClockRate, uint32_t DesiredFequency) {
+	Irqs = 0;
 	ConfigInputPins();
 	ConfigTimer(TimerBaseClockRate, DesiredFequency);
-	Irqs = 0;
 }
 
 /**

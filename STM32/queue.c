@@ -24,9 +24,10 @@
 // The sample queue is fed by the timer interrupt and read from the main sample
 // loop. Note that the 'qCount' variable is used by both of these 'threads',
 // so it must be protected by a simple semaphore (enqueueBusy and dequeueBusy).
+// NOTE: the semaphore didn't work, so it was commented-out.
 static volatile uint8_t queue[QSIZE];
 static volatile uint32_t qHead, qTail, qCount;
-static volatile uint8_t enqueueBusy, dequeueBusy;
+//static volatile uint8_t enqueueBusy, dequeueBusy;
 static volatile uint8_t firstSample;
 static volatile uint8_t prevSample;
 volatile uint8_t Overflow;
@@ -36,7 +37,8 @@ volatile uint8_t Overflow;
 // then we 'stack' samples before enqueuing them.
 static uint8_t stackedSample;
 static uint8_t stackShift;
-static uint8_t stackMask;
+static uint8_t channelMask;
+static uint8_t channelShift;
 
 /**
  * @brief  Clear the sample queue
@@ -44,26 +46,27 @@ static uint8_t stackMask;
  * @retval none
  */
 void ClearSampleQueue() {
+	uint8_t channelMasks[] = { 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff };
 	qHead = qTail = qCount = 0;
-	enqueueBusy = dequeueBusy = 0;
+//	enqueueBusy = dequeueBusy = 0;
 
+	channelMask = channelMasks[SamplingChannels - 1];
 	switch (SamplingChannels) {
 	case 1:
-		stackMask = 0x01;
+		channelShift = 1;
 		break;
 	case 2:
-		stackMask = 0x03;
+		channelShift = 2;
 		break;
 	case 3:
-		stackMask = 0x07;
-		break;
 	case 4:
-		stackMask = 0x0f;
+		channelShift = 4;
 		break;
 	default:
-		stackMask = 0xff;
+		channelShift = 8;
 		break;
 	}
+
 	stackShift = 0;
 	stackedSample = 0;
 	Overflow = 0;
@@ -105,12 +108,12 @@ static uint16_t enqueueByte(uint8_t byte) {
 		qTail = 0;
 
 	// We need to protect 'qCount' with a simple semaphore. If the main
-	// 'thread' is dequeueing, we need to wait before incrementing the count.
-	while (dequeueBusy)
-		;
-	enqueueBusy = 1;
+	// 'thread' is dequeuing, we need to wait before incrementing the count.
+//	while (dequeueBusy)
+//		;
+//	enqueueBusy = 1;
 	qCount++;
-	enqueueBusy = 0;
+//	enqueueBusy = 0;
 	return 0;
 }
 
@@ -122,6 +125,9 @@ static uint16_t enqueueByte(uint8_t byte) {
  * @retval 0 if successful, -1 if the queue is full
  */
 int16_t EnqueueSample(uint8_t sample) {
+	// Mask off the bits we're not using.
+	sample &= channelMask;
+
 	if (SamplingMode == SAMPLING_MODE_TRANSITIONONLY) {
 		// When in transition mode, we need to send a
 		// rollover marker every time we roll over 16 bits.
@@ -140,8 +146,8 @@ int16_t EnqueueSample(uint8_t sample) {
 		// Check if we can stack more samples per byte.
 		// Note that transition-only mode does not stack samples.
 		if (SamplingChannels <= 4) {
-			stackedSample |= (sample & stackMask) << stackShift;
-			stackShift += SamplingChannels;
+			stackedSample |= sample << stackShift;
+			stackShift += channelShift;
 
 			// If we don't yet have a full byte, wait for the next sample
 			// before queuing it.
@@ -207,11 +213,11 @@ uint8_t DequeueSample() {
 		qHead = 0;
 
 	// We need to protect 'qCount' with a simple semaphore. If the interrupt
-	// 'thread' is enqueueing, we need to wait before decrementing the count.
-	while (enqueueBusy)
-		;
-	dequeueBusy = 1;
+	// 'thread' is enqueuing, we need to wait before decrementing the count.
+//	while (enqueueBusy)
+//		;
+//	dequeueBusy = 1;
 	qCount--;
-	dequeueBusy = 0;
+//	dequeueBusy = 0;
 	return sample;
 }

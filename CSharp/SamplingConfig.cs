@@ -125,5 +125,31 @@ namespace LogicAnalyzer
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
+
+        private void dataModeTransitions_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dataModeTransitions.Checked)
+            {
+                compression.Checked = false;
+                compression.Enabled = false;
+            }
+            else
+                compression.Enabled = true;
+        }
+
+        private void serialPortController_CheckedChanged(object sender, EventArgs e)
+        {
+            if (testController.Checked)
+            {
+                compression.Checked = false;
+                compression.Enabled = false;
+                serialPortName.Enabled = false;
+            }
+            else
+            {
+                compression.Enabled = true;
+                serialPortName.Enabled = true;
+            }
+        }
     }
 }

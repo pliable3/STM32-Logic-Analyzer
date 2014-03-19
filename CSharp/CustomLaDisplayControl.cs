@@ -16,7 +16,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#define ShowDashedTransitionLine
+//#define ShowDashedTransitionLine
 
 using System;
 using System.Collections.Generic;
@@ -110,6 +110,8 @@ namespace LogicAnalyzer
         {
             int i = 0;
             int sampleTicks = 0;
+
+            Signals = new List<SampleSignal>[Samples.SampleSignals.Length];
 
             foreach (List<SampleSignal> sampleList in Samples.SampleSignals)
             {

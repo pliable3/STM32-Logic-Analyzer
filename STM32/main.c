@@ -104,7 +104,7 @@ static void SampleLoop() {
 		UsartSendString("<cmp>");
 	}
 
-	// CLear the output queue and set the timer to send an interrupt at our
+	// Clear the output queue and set the timer to send an interrupt at our
 	// current sampling rate.
 	ClearSampleQueue();
 	TimerInit(TimerBaseClockRate, SamplingRate);
@@ -193,7 +193,7 @@ void SysTick_Handler() {
  */
 void Copyright() {
 	UsartSendString("Logic Analyzer by Bob Foley\r\n");
-	UsartSendString("version 0.50  (rev. 15-Mar-2014 8:00 a.m.)\r\n\r\n");
+	UsartSendString("version 0.50  (rev. 18-Mar-2014 6:34 p.m.)\r\n\r\n");
 }
 
 /**

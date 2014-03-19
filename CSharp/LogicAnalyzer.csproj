@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="Collections\IRecyclable.cs" />
     <Compile Include="Collections\ObjectPool.cs" />
     <Compile Include="Compression\Compression.cs" />
@@ -101,6 +107,9 @@
       <DependentUpon>SamplingConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="Test\LaTestDevice.cs" />
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomConsole.resx">
       <DependentUpon>CustomConsole.cs</DependentUpon>
     </EmbeddedResource>
@@ -138,6 +147,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Images\Dodecahedron.gif" />
     <Content Include="License.txt" />
     <Content Include="ToDo.txt" />
   </ItemGroup>

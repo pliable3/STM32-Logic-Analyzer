@@ -39,38 +39,48 @@ namespace LogicAnalyzer.DataAcquisition
         /// </summary>
         /// <param name="Samples">Raw sampled data from the input device</param>
         /// <param name="Channels">The number of channels being sampled (when 4 or fewer, sample data is 'stacked')</param>
-        public SamplePlot(byte[] Samples, int Channels)
+        /// <param name="StackedSamples">'true' if more than one sample is stacked in each byte</param>
+        public SamplePlot(byte[] Samples, int Channels, bool StackedSamples)
         {
-            // When the number of channels is 4 or fewer, samples are 'stacked'. So here
-            // we define the number of samples per byte and shift needed to get to the next
-            // sample.
-            switch(Channels)
+            if (StackedSamples)
             {
-                case 1:
-                    samplesPerByte = 8;
-                    sampleShift = 1;
-                    break;
-                case 2:
-                    samplesPerByte = 4;
-                    sampleShift = 2;
-                    break;
-                case 3:
-                case 4:
-                    samplesPerByte = 2;
-                    sampleShift = 4;
-                    break;
-                default:
-                    if(Channels < 1 || Channels > 8)
-                        throw new Exception("Channels must be in the range 1 - 8");
-                    samplesPerByte = 1;
-                    sampleShift = 0;
-                    break;
+                // When the number of channels is 4 or fewer, samples are 'stacked'. So here
+                // we define the number of samples per byte and shift needed to get to the next
+                // sample.
+                switch (Channels)
+                {
+                    case 1:
+                        samplesPerByte = 8;
+                        sampleShift = 1;
+                        break;
+                    case 2:
+                        samplesPerByte = 4;
+                        sampleShift = 2;
+                        break;
+                    case 3:
+                    case 4:
+                        samplesPerByte = 2;
+                        sampleShift = 4;
+                        break;
+                    default:
+                        if (Channels < 1 || Channels > 8)
+                            throw new Exception("Channels must be in the range 1 - 8");
+                        samplesPerByte = 1;
+                        sampleShift = 0;
+                        break;
+                }
             }
+            else
+            {
+                samplesPerByte = 1;
+                sampleShift = 0;
+            }
+
             this.Channels = Channels;
             this.SampleSignals = new List<SampleSignal>[Channels];
             currentChannelSignal = new SampleSignal[Channels];
 
-            for(int c = 0; c < Channels; c++)
+            for (int c = 0; c < Channels; c++)
             {
                 // Initialize each channel low, 0 duration.
                 currentChannelSignal[c] = new SampleSignal(SampleSignal.State.Low, 0);
@@ -103,6 +113,15 @@ namespace LogicAnalyzer.DataAcquisition
             internal set;
         }
 
+        /// <summary>
+        /// 'true' if more than one sample is stacked in each byte
+        /// </summary>
+        public bool StackedSamples
+        {
+            get;
+            internal set;
+        }
+
         #endregion
 
         #region Methods
@@ -115,7 +134,7 @@ namespace LogicAnalyzer.DataAcquisition
         {
             SampleSignal ss = currentChannelSignal[channel];
 
-            if(ss.Duration > 0)
+            if (ss.Duration > 0)
             {
                 SampleSignals[channel].Add(ss);
 
@@ -133,17 +152,17 @@ namespace LogicAnalyzer.DataAcquisition
         {
             bool stateChanged;
 
-            for(int c = 0; c < Channels; c++)
+            for (int c = 0; c < Channels; c++)
             {
                 // Check if the state for this channel changed.
-                if((sample & (1 << c)) != 0)
+                if ((sample & (1 << c)) != 0)
                     stateChanged = (currentChannelSignal[c].SampleState == SampleSignal.State.Low);
                 else
                     stateChanged = (currentChannelSignal[c].SampleState == SampleSignal.State.High);
 
                 // If the state (high/low) changed from the last sample, then add a new signal.
                 // Otherwise, just increase the duration of the previous signal.
-                if(stateChanged)
+                if (stateChanged)
                     addSignal(c);
                 else
                     currentChannelSignal[c].Duration++;
@@ -158,10 +177,10 @@ namespace LogicAnalyzer.DataAcquisition
         {
             byte shiftedSampleByte;
 
-            foreach(byte sampleByte in Samples)
+            foreach (byte sampleByte in Samples)
             {
                 shiftedSampleByte = sampleByte;
-                for(int s = 0; s < samplesPerByte; s++)
+                for (int s = 0; s < samplesPerByte; s++)
                 {
                     processSample(shiftedSampleByte);
                     shiftedSampleByte >>= sampleShift;
@@ -169,7 +188,7 @@ namespace LogicAnalyzer.DataAcquisition
             }
 
             // Finish up.
-            for(int c = 0; c < Channels; c++)
+            for (int c = 0; c < Channels; c++)
                 addSignal(c);
         }
 

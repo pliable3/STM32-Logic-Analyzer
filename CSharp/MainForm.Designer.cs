@@ -68,6 +68,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.customLaDisplayControl1 = new LogicAnalyzer.CustomLaDisplayControl();
             this.splitContainerBottom = new System.Windows.Forms.SplitContainer();
             this.panel3 = new System.Windows.Forms.Panel();
             this.compressionPercent = new System.Windows.Forms.Label();
@@ -82,9 +83,8 @@
             this.startSampling = new System.Windows.Forms.Button();
             this.dataRate = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.customLaDisplayControl1 = new LogicAnalyzer.CustomLaDisplayControl();
             this.laConsole = new LogicAnalyzer.CustomConsole();
+            this.label9 = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -256,6 +256,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.aboutToolStripMenuItem.Text = "About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // toolStrip
             // 
@@ -374,7 +375,7 @@
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.splitContainerBottom);
             this.splitContainerMain.Size = new System.Drawing.Size(944, 713);
-            this.splitContainerMain.SplitterDistance = 490;
+            this.splitContainerMain.SplitterDistance = 492;
             this.splitContainerMain.SplitterWidth = 2;
             this.splitContainerMain.TabIndex = 4;
             this.splitContainerMain.TabStop = false;
@@ -398,7 +399,7 @@
             // splitContainerTop.Panel2
             // 
             this.splitContainerTop.Panel2.Controls.Add(this.panel1);
-            this.splitContainerTop.Size = new System.Drawing.Size(944, 490);
+            this.splitContainerTop.Size = new System.Drawing.Size(944, 492);
             this.splitContainerTop.SplitterDistance = 100;
             this.splitContainerTop.SplitterWidth = 2;
             this.splitContainerTop.TabIndex = 0;
@@ -461,7 +462,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(840, 488);
+            this.panel1.Size = new System.Drawing.Size(840, 490);
             this.panel1.TabIndex = 2;
             // 
             // panel2
@@ -473,8 +474,20 @@
             this.panel2.Location = new System.Drawing.Point(10, 10);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(816, 465);
+            this.panel2.Size = new System.Drawing.Size(816, 467);
             this.panel2.TabIndex = 0;
+            // 
+            // customLaDisplayControl1
+            // 
+            this.customLaDisplayControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.customLaDisplayControl1.BackColor = System.Drawing.Color.Black;
+            this.customLaDisplayControl1.Location = new System.Drawing.Point(0, 0);
+            this.customLaDisplayControl1.Name = "customLaDisplayControl1";
+            this.customLaDisplayControl1.Size = new System.Drawing.Size(817, 467);
+            this.customLaDisplayControl1.TabIndex = 0;
+            this.customLaDisplayControl1.MouseLeave += new System.EventHandler(this.customLaDisplayControl1_MouseLeave);
             // 
             // splitContainerBottom
             // 
@@ -496,7 +509,7 @@
             this.splitContainerBottom.Panel2.BackColor = System.Drawing.Color.NavajoWhite;
             this.splitContainerBottom.Panel2.Controls.Add(this.laConsole);
             this.splitContainerBottom.Panel2.Controls.Add(this.label9);
-            this.splitContainerBottom.Size = new System.Drawing.Size(944, 221);
+            this.splitContainerBottom.Size = new System.Drawing.Size(944, 219);
             this.splitContainerBottom.SplitterDistance = 97;
             this.splitContainerBottom.SplitterWidth = 2;
             this.splitContainerBottom.TabIndex = 0;
@@ -636,6 +649,16 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Data Rate:";
             // 
+            // laConsole
+            // 
+            this.laConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.laConsole.Location = new System.Drawing.Point(11, 23);
+            this.laConsole.Name = "laConsole";
+            this.laConsole.Size = new System.Drawing.Size(919, 86);
+            this.laConsole.TabIndex = 16;
+            // 
             // label9
             // 
             this.label9.BackColor = System.Drawing.Color.Transparent;
@@ -644,28 +667,6 @@
             this.label9.Size = new System.Drawing.Size(57, 14);
             this.label9.TabIndex = 15;
             this.label9.Text = "Console:";
-            // 
-            // customLaDisplayControl1
-            // 
-            this.customLaDisplayControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.customLaDisplayControl1.BackColor = System.Drawing.Color.Black;
-            this.customLaDisplayControl1.Location = new System.Drawing.Point(0, 0);
-            this.customLaDisplayControl1.Name = "customLaDisplayControl1";
-            this.customLaDisplayControl1.Size = new System.Drawing.Size(817, 465);
-            this.customLaDisplayControl1.TabIndex = 0;
-            this.customLaDisplayControl1.MouseLeave += new System.EventHandler(this.customLaDisplayControl1_MouseLeave);
-            // 
-            // laConsole
-            // 
-            this.laConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.laConsole.Location = new System.Drawing.Point(11, 23);
-            this.laConsole.Name = "laConsole";
-            this.laConsole.Size = new System.Drawing.Size(919, 88);
-            this.laConsole.TabIndex = 16;
             // 
             // MainForm
             // 
